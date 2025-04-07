@@ -1,0 +1,18 @@
+export const productIcons = [
+  "Cake",
+  "Cookie",
+  "IceCream",
+  "Candy",
+  "Croissant",
+  "Dessert",
+  "Cherry",
+  "Coffee",
+  "Lollipop",
+  "Donut",
+  "PieChart",
+  "Sandwich",
+  "Pizza",
+  "Salad",
+  "Soup",
+  "Wine",
+];
