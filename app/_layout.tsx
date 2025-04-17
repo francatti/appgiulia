@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Platform } from "react-native";
 import { ErrorBoundary } from "./error-boundary";
 import { colors } from "@/constants/colors";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -38,9 +39,11 @@ export default function RootLayout() {
   }
 
   return (
-    <ErrorBoundary>
-      <RootLayoutNav />
-    </ErrorBoundary>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ErrorBoundary>
+        <RootLayoutNav />
+      </ErrorBoundary>
+    </GestureHandlerRootView>
   );
 }
 
@@ -51,9 +54,9 @@ function RootLayoutNav() {
         headerStyle: {
           backgroundColor: colors.background,
         },
-        headerTintColor: colors.text,
+        headerTintColor: colors.textHeader,
         headerTitleStyle: {
-          fontWeight: '600',
+          fontWeight: "600",
         },
         contentStyle: {
           backgroundColor: colors.background,

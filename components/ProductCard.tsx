@@ -16,13 +16,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onPress,
   compact = false,
 }) => {
-  // Convert kebab-case to PascalCase for icon name
-  const pascalCaseIconName =
-    product.icon.charAt(0).toUpperCase() + product.icon.slice(1);
-
-  // @ts-ignore - dynamic icon import
-  const IconComponent = Icons[pascalCaseIconName] || Icons.HelpCircle;
-
   if (compact) {
     return (
       <TouchableOpacity
@@ -30,9 +23,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         onPress={onPress}
         disabled={!onPress}
       >
-        <View style={styles.compactIconContainer}>
-          <IconComponent size={20} color={colors.primary} />
-        </View>
         <View style={styles.compactContent}>
           <Text style={styles.compactName} numberOfLines={1}>
             {product.name}
@@ -52,9 +42,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       disabled={!onPress}
       activeOpacity={onPress ? 0.7 : 1}
     >
-      <View style={styles.iconContainer}>
-        <IconComponent size={28} color={colors.primary} />
-      </View>
       <View style={styles.content}>
         <Text style={styles.name}>{product.name}</Text>
         <Text style={styles.price}>{formatCurrency(product.price)}</Text>

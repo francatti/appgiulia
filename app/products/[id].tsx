@@ -1,88 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TextInput, 
-  ScrollView, 
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  Alert
-} from 'react-native';
-import { useProductStore } from '@/store/product-store';
-import { colors } from '@/constants/colors';
-import { Button } from '@/components/Button';
-import { IconSelector } from '@/components/IconSelector';
-import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
-import { Trash2, X } from 'lucide-react-native';
+  Alert,
+} from "react-native";
+import { useProductStore } from "@/store/product-store";
+import { colors } from "@/constants/colors";
+import { Button } from "@/components/Button";
+import { CategorySelector } from "@/components/CategorySelector";
+// import { IconSelector } from "@/components/IconSelector";
+import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { Trash2, X } from "lucide-react-native";
 
 export default function EditProductScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { getProductById, updateProduct, deleteProduct } = useProductStore();
-  
+
   const product = getProductById(id as string);
-  
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [icon, setIcon] = useState('cake');
+
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  //  const [icon, setIcon] = useState('cake');
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     if (product) {
       setName(product.name);
       setPrice(product.price.toString());
       setDescription(product.description);
-      setIcon(product.icon);
+      setCategory(product.category); // Atualiza a categoria selecionada
+      //   setIcon(product.icon);
     } else {
       // Product not found, go back
-      Alert.alert('Erro', 'Produto não encontrado');
+      Alert.alert("Erro", "Produto não encontrado");
       router.back();
     }
   }, [product]);
-  
+
   const handleSave = () => {
     if (!name.trim()) {
-      Alert.alert('Erro', 'Por favor, insira um nome para o produto');
+      Alert.alert("Erro", "Por favor, insira um nome para o produto");
       return;
     }
-    
+
     if (!price.trim() || isNaN(parseFloat(price))) {
-      Alert.alert('Erro', 'Por favor, insira um preço válido');
+      Alert.alert("Erro", "Por favor, insira um preço válido");
       return;
     }
-    
+
     setLoading(true);
-    
+
     // Simulate a delay
     setTimeout(() => {
       updateProduct(id as string, {
         name: name.trim(),
         price: parseFloat(price),
         description: description.trim(),
-        icon,
+        category, // Salva a categoria selecionada
+        //    icon,
       });
-      
+
       setLoading(false);
       router.back();
     }, 500);
   };
-  
+
   const handleDelete = () => {
     Alert.alert(
-      'Excluir Produto',
-      'Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.',
+      "Excluir Produto",
+      "Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.",
       [
         {
-          text: 'Cancelar',
-          style: 'cancel',
+          text: "Cancelar",
+          style: "cancel",
         },
         {
-          text: 'Excluir',
-          style: 'destructive',
+          text: "Excluir",
+          style: "destructive",
           onPress: () => {
             deleteProduct(id as string);
             router.back();
@@ -98,21 +102,16 @@ export default function EditProductScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          title: 'Editar Produto',
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <X size={24} color={colors.text} />
-            </TouchableOpacity>
-          ),
-        }} 
+          title: "Editar Produto",
+        }}
       />
-      
+
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
       >
         <ScrollView style={styles.scrollView}>
           <View style={styles.formContainer}>
@@ -126,7 +125,7 @@ export default function EditProductScreen() {
                 placeholderTextColor={colors.textLight}
               />
             </View>
-            
+
             <View style={styles.formGroup}>
               <Text style={styles.label}>Preço</Text>
               <TextInput
@@ -138,12 +137,13 @@ export default function EditProductScreen() {
                 keyboardType="decimal-pad"
               />
             </View>
-            
-            <IconSelector
-              selectedIcon={icon}
-              onSelectIcon={setIcon}
+
+            <CategorySelector
+              selectedCategory={category}
+              onSelectCategory={(selectedCategory) => {
+                setCategory(selectedCategory); // Atualiza a categoria selecionada
+              }}
             />
-            
             <View style={styles.formGroup}>
               <Text style={styles.label}>Descrição (Opcional)</Text>
               <TextInput
@@ -159,7 +159,7 @@ export default function EditProductScreen() {
             </View>
           </View>
         </ScrollView>
-        
+
         <View style={styles.footer}>
           <Button
             title="Excluir Produto"
@@ -168,7 +168,7 @@ export default function EditProductScreen() {
             icon={<Trash2 size={18} color="white" />}
             style={styles.deleteButton}
           />
-          
+
           <Button
             title="Salvar Alterações"
             onPress={handleSave}
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 8,
     color: colors.text,
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.background,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   deleteButton: {
     flex: 1,

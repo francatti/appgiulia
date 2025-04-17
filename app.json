@@ -14,13 +14,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nfrancatti.expoapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.nfrancatti.expoapp"
     },
     "plugins": [
       "expo-router"
@@ -33,8 +38,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "0d1ced28-c2f2-412d-9338-ec3fc7d7ffb6"
+        "projectId": "e43644ba-eef0-494b-b5f9-2e8f46501311"
       }
-    }
+    },
+    "owner": "francattinicholas"
   }
 }

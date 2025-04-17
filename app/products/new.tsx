@@ -14,18 +14,19 @@ import {
 import { useProductStore } from "@/store/product-store";
 import { colors } from "@/constants/colors";
 import { Button } from "@/components/Button";
-import { IconSelector } from "@/components/IconSelector";
+import { CategorySelector } from "@/components/CategorySelector";
+// import { IconSelector } from "@/components/IconSelector";
 import { useRouter, Stack } from "expo-router";
 import { X } from "lucide-react-native";
 
 export default function NewProductScreen() {
   const router = useRouter();
   const { addProduct } = useProductStore();
-
+  const [category, setCategory] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [icon, setIcon] = useState("cake");
+  // const [icon, setIcon] = useState("cake");
   const [loading, setLoading] = useState(false);
 
   const handleSave = () => {
@@ -39,15 +40,19 @@ export default function NewProductScreen() {
       return;
     }
 
+    if (!category.trim()) {
+      Alert.alert("Erro", "Por favor, selecione uma categoria");
+      return;
+    }
+
     setLoading(true);
 
-    // Simulate a delay
     setTimeout(() => {
       addProduct({
         name: name.trim(),
         price: parseFloat(price),
         description: description.trim(),
-        icon,
+        category: category.trim(),
       });
 
       setLoading(false);
@@ -60,11 +65,6 @@ export default function NewProductScreen() {
       <Stack.Screen
         options={{
           title: "Novo Produto",
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <X size={24} color={colors.text} />
-            </TouchableOpacity>
-          ),
         }}
       />
 
@@ -98,10 +98,10 @@ export default function NewProductScreen() {
               />
             </View>
 
-            <IconSelector
-              selectedIcon={icon}
-              onSelectIcon={(selectedIcon) => {
-                setIcon(selectedIcon); // Atualiza o estado
+            <CategorySelector
+              selectedCategory={category}
+              onSelectCategory={(selectedCategory) => {
+                setCategory(selectedCategory); // Atualiza a categoria selecionada
               }}
             />
 
